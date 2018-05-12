@@ -9,15 +9,24 @@ for (i = 0; i < myNodelist.length; i++) {
   myNodelist[i].appendChild(span);
 }
 
-// Click on a close button to hide the current list item
-var close = document.getElementsByClassName("close");
-var i;
-for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
-  }
+function getDate() {
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //January is 0!
+  var yyyy = today.getFullYear();
+
+  if(dd<10) {
+      dd = '0'+dd
+  }
+
+  if(mm<10) {
+      mm = '0'+mm
+  }
+
+  today = mm + '/' + dd + '/' + yyyy;
+  return today;
 }
+
 
 // Add a "checked" symbol when clicking on a list item
 let listItem = document.querySelector('li');
@@ -38,7 +47,8 @@ addBtn.addEventListener("click",() => {
 })
 // Create a new list item when clicking on the "Add" button
 function newElement() {
-  console.log("button")
+  var todoList = document.getElementById("myUL");
+  var doneList = document.getElementById("completed-items");
   var li = document.createElement("li");
   var inputValue = document.getElementById("myInput").value;
   var t = document.createTextNode(inputValue);
@@ -47,19 +57,27 @@ function newElement() {
     alert("You must write something!");
   } else {
     document.getElementById("myUL").appendChild(li);
-  }
-  document.getElementById("myInput").value = "";
+    document.getElementById("myInput").value = "";
 
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  li.appendChild(span);
+    var span = document.createElement("SPAN");
+    var txt = document.createTextNode("\u00D7");
+    span.className = "close";
+    span.appendChild(txt);
+    li.appendChild(span);
 
-  for (i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
-      var div = this.parentElement;
-      div.style.display = "none";
-    }
+    // Click on a close button to hide the current list item
+    var close = document.getElementsByClassName("close");
+    var i;
+    for (i = 0; i < close.length; i++) {
+      close[i].onclick = function() {
+        var div = this.parentElement;
+        var timeStamp = document.createTextNode(" " + new Date());
+        todoList.removeChild(div);
+        div.appendChild(timeStamp);
+        div.removeChild(this);
+
+        doneList.appendChild(div);
+      }
+    }
   }
 }
